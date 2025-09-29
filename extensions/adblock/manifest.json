@@ -1,0 +1,13 @@
+{
+  "name": "AdBlock (EasyList)",
+  "description": "Bloqueador básico que descarga EasyList, cachea y bloquea recursos por patrones.",
+  "version": "1.0",
+  "module": "plugin.py",
+  "content_scripts": [
+    {
+      "matches": ["*"],
+      "js": ["content.js"],
+      "run_at": "document_end"
+    }
+  ]
+}
