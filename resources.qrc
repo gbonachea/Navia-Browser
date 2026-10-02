@@ -1,0 +1,35 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>icons/back.png</file>
+        <file>icons/forward.png</file>
+        <file>icons/reload.png</file>
+        <file>icons/reloadoff.png</file>
+        <file>icons/new_tab.png</file>
+        <file>icons/star.png</file>
+        <file>icons/download.png</file>
+        <file>icons/menu.png</file>
+        <file>icons/home.png</file>
+        <file>icons/traductor.png</file>
+        <file>icons/seguridad.png</file>
+        <file>icons/close.png</file>
+        <file>icons/about.png</file>
+        <file>icons/icon.png</file>
+    </qresource>
+    <qresource prefix="/newtab">
+        <file alias="page.html">page/page.html</file>
+        <file alias="page/barco.png">page/page/barco.png</file>
+        <file alias="page/buscar.png">page/page/buscar.png</file>
+        <file alias="page/chatgpt.png">page/page/chatgpt.png</file>
+        <file alias="page/discord.png">page/page/discord.png</file>
+        <file alias="page/duckduckgo.png">page/page/duckduckgo.png</file>
+        <file alias="page/facebook.png">page/page/facebook.png</file>
+        <file alias="page/g.png">page/page/g.png</file>
+        <file alias="page/github.png">page/page/github.png</file>
+        <file alias="page/google.png">page/page/google.png</file>
+        <file alias="page/store.png">page/page/store.png</file>
+        <file alias="page/telegram.png">page/page/telegram.png</file>
+    </qresource>
+    <qresource prefix="/easylist">
+        <file alias="easylist.txt">easylist/easylist.txt</file>
+    </qresource>
+</RCC>

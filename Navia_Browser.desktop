@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Navia Browser
+Version=1.0
+Exec=/opt/Navia/navia.sh %U
+Comment=Navegador Web Ligero
+Icon=navia
+Type=Application
+Terminal=false
+StartupNotify=true
+Categories=Network;WebBrowser;
+MimeType=text/html;text/xml;application/xhtml+xml;application/xml;application/rss+xml;application/rdf+xml;image/gif;image/jpeg;image/png;image/webp;image/svg+xml;image/bmp;image/x-icon;application/pdf;x-scheme-handler/http;x-scheme-handler/https;

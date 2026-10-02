@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navia</title>
+    <!-- Cargamos FontAwesome para los iconos de la barra lateral -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #020208;
+            color: #ffffff;
+        }
+
+        /* Fondo Galáctico animado con Canvas */
+        #space-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        /* Contenedor Principal */
+        .wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            display: flex;
+        }
+
+        /* BARRA LATERAL ESTILO UBUNTU */
+        .sidebar {
+            width: 65px;
+            height: calc(100% - 20px);
+            background: rgba(0, 11, 41, 0.541);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin: 10px;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+            gap: 15px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .shortcut-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        /* Esto controla que TUS imágenes tengan el tamaño perfecto */
+        .shortcut-btn img {
+            width: 22px;  /* El tamaño ideal para que luzca como los de FontAwesome */
+            height: 22px; /* Mantiene la proporción cuadrada */
+            object-fit: contain; /* Evita que la imagen se estire feo */
+            filter: brightness(0) invert(1); /* ¡MAGIA! Convierte cualquier icono en color blanco puro */
+        }
+
+        .shortcut-btn:hover {
+            background: rgba(147, 51, 234, 0.3);
+            border-color: #9333ea;
+            box-shadow: 0 0 15px rgba(147, 51, 234, 0.5);
+            transform: scale(1.08);
+        }
+
+        /* CONTENIDO CENTRAL */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding-right: 65px;
+        }
+
+        /* Logotipo */
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .logo-icon {
+            font-size: 65px;
+            background: linear-gradient(135deg, #a855f7, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 20px rgba(168, 85, 247, 0.4));
+            margin-bottom: 10px;
+            animation: float 4s ease-in-out infinite;
+        }
+        /* Modificación para usar una imagen propia en el logo */
+        .logo-icon img {
+            width: 80px;      /* Tamaño ideal para el logo central */
+            height: 80px;     /* Mantiene la proporción cuadrada */
+            object-fit: contain;
+        /* Opcional: elimina el "filter" de abajo si tu logo ya tiene color y no lo quieres blanco */
+            filter: drop-shadow(0 0 20px rgba(168, 85, 247, 0.6)) brightness(0) invert(1);
+        }
+
+        .logo-text {
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            background: linear-gradient(to right, #ffffff, #cbd5e1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Barra de Búsqueda */
+        .search-box {
+            width: 100%;
+            max-width: 550px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 16px 24px 16px 55px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 30px;
+            color: #ffffff;
+            outline: none;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            transition: all 0.4s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .search-box input:focus {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #3b82f6;
+            box-shadow: 0 0 25px rgba(59, 130, 246, 0.4), inset 0 0 8px rgba(255, 255, 255, 0.1);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 22px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 18px;
+            transition: color 0.3s ease;
+        }
+
+        .search-box input:focus + i {
+            color: #3b82f6;
+        }
+
+        /* RELOJ SCI-FI (ACTUALIZADO) */
+        .clock-container {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(2, 6, 23, 0.65);
+            padding: 10px 20px;
+            /* Esquinas cortadas estilo Sci-Fi */
+            clip-path: polygon(0 0, 85% 0, 100% 30%, 100% 100%, 15% 100%, 0 70%);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            box-shadow: inset 0 0 15px rgba(0, 240, 255, 0.15);
+        }
+
+        /* Pequeña etiqueta de sistema arriba de la hora */
+        .clock-label {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 9px;
+            color: #00f0ff;
+            letter-spacing: 2px;
+            margin-bottom: 2px;
+            opacity: 0.8;
+            text-shadow: 0 0 5px rgba(0, 240, 255, 0.5);
+        }
+
+        #clock {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 32px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: #00f0ff;
+            /* Efecto neón/holograma azul galáctico */
+            text-shadow: 0 0 5px rgba(0, 240, 255, 0.6), 
+                         0 0 15px rgba(0, 240, 255, 0.4), 
+                         0 0 30px rgba(0, 240, 255, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Lienzo para las estrellas y luces galácticas -->
+    <canvas id="space-canvas"></canvas>
+
+    <div class="wrapper">
+        
+        <!-- Barra lateral estilo Ubuntu -->
+        <nav class="sidebar">
+            <a href="https://art-ripoll.github.io/" target="_self" class="shortcut-btn" title="Art Ripoll">
+              <img src="./page/barco.png" alt="Art Ripoll">
+            </a>
+            <a href="https://gbonachea.github.io/" target="_self" class="shortcut-btn" title="GBonachea">
+              <img src="./page/g.png" alt="GBonachea">
+            </a>
+            <a href="https://stellar-store.github.io/" target="_self" class="shortcut-btn" title="Stellar Store">
+              <img src="./page/store.png" alt="Stellar Store">
+            </a>
+            <a href="https://www.duckduckgo.com" target="_self" class="shortcut-btn" title="DuckDuckGo">
+              <img src="./page/duckduckgo.png" alt="DuckDuckGo">
+            </a>
+            <a href="https://www.google.com" target="_self" class="shortcut-btn" title="Google">
+              <img src="./page/google.png" alt="Google">
+            </a>
+            <a href="https://github.com/" target="_self" class="shortcut-btn" title="GitHub">
+              <img src="./page/github.png" alt="GitHub">
+            </a>
+            <a href="https://chatgpt.com/" target="_self" class="shortcut-btn" title="ChatGPT">
+              <img src="./page/chatgpt.png" alt="ChatGPT">
+            </a>
+            <a href="https://web.telegram.org/" target="_self" class="shortcut-btn" title="Telegram">
+              <img src="./page/telegram.png" alt="Telegram">
+            </a>
+            <a href="https://discord.com/" target="_self" class="shortcut-btn" title="Discord">
+              <img src="./page/discord.png" alt="Discord">
+            </a>
+        </nav>
+
+        <!-- Zona central: Logo y Buscador -->
+        <main class="main-content">
+            <div class="logo-container">
+    <!-- Cambiamos el icono <i> por tu imagen <img> -->
+                <div class="logo-icon">
+                    <img src="./page/barco.png" alt="Logo Navia>
+                </div>
+                <h1 class="logo-text">Navia Browser</h1>
+            </div>
+            <!-- Formulario de búsqueda -->
+            <form action="https://duckduckgo.com/search" method="GET" class="search-box">
+                <input type="text" name="q" placeholder="Buscar en el Stellar..." autocomplete="off">
+                <i class="fas fa-search"></i>
+            </form>
+        </main>
+
+        <!-- Reloj Sci-Fi -->
+        <div class="clock-container">
+            <span class="clock-label">SYS_TIME</span>
+            <div id="clock">00:00</div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- SCRIPT DEL RELOJ (Solo horas y minutos) ---
+        function updateClock() {
+            const now = new Date();
+            let hours = String(now.getHours()).padStart(2, '0');
+            let minutes = String(now.getMinutes()).padStart(2, '0');
+            
+            // Renderiza únicamente HH:MM
+            document.getElementById('clock').textContent = `${hours}:${minutes}`;
+        }
+        // Se actualiza cada segundo para asegurar precisión al cambiar de minuto
+        setInterval(updateClock, 1000);
+        updateClock();
+
+
+        // --- SCRIPT DEL FONDO GALÁCTICO ANIMADO ---
+        const canvas = document.getElementById('space-canvas');
+        const ctx = canvas.getContext('2d');
+
+        let stars = [];
+        const numStars = 150;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        for (let i = 0; i < numStars; i++) {
+            stars.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: Math.random() * 1.5 + 0.5,
+                alphaSpeed: Math.random() * 0.02 + 0.005,
+                alpha: Math.random(),
+                decreasing: Math.random() > 0.5
+            });
+        }
+
+        function animate() {
+            ctx.fillStyle = '#03020a';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            stars.forEach(star => {
+                if (star.decreasing) {
+                    star.alpha -= star.alphaSpeed;
+                    if (star.alpha <= 0.2) star.decreasing = false;
+                } else {
+                    star.alpha += star.alphaSpeed;
+                    if (star.alpha >= 1) star.decreasing = true;
+                }
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(220, 235, 255, ${star.alpha})`;
+                
+                if (star.radius > 1.3) {
+                    ctx.shadowBlur = 10;
+                    ctx.shadowColor = '#9333ea';
+                }
+                
+                ctx.fill();
+                ctx.restore();
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', () => {
+            stars.forEach(star => {
+                star.x = Math.random() * canvas.width;
+                star.y = Math.random() * canvas.height;
+            });
+        });
+
+        animate();
+    </script>
+</body>
+</html>
